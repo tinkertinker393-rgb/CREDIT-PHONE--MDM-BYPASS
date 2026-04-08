@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "Device": {
+      "title": "Device",
+      "description": "A managed mobile device",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "model": { "type": "string" },
+        "brand": { "type": "string" },
+        "androidVersion": { "type": "string" },
+        "imei": { "type": "string" },
+        "status": { "type": "string", "enum": ["Active", "Locked", "Enrolling", "Wiped"] },
+        "lastSeen": { "type": "string", "format": "date-time" },
+        "kgState": { "type": "string" },
+        "securityPatch": { "type": "string" }
+      },
+      "required": ["id", "model", "brand"]
+    },
+    "Command": {
+      "title": "Command",
+      "description": "A remote command sent to a device",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "deviceId": { "type": "string" },
+        "type": { "type": "string", "enum": ["wipe", "reboot", "lock", "unlock"] },
+        "status": { "type": "string", "enum": ["pending", "sent", "completed", "failed"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["deviceId", "type", "status"]
+    },
+    "Log": {
+      "title": "Log",
+      "description": "System or device operation log",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "deviceId": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string", "enum": ["info", "success", "error", "warning"] },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["message", "type", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/devices/{deviceId}": {
+      "schema": "Device",
+      "description": "Managed devices"
+    },
+    "/commands/{commandId}": {
+      "schema": "Command",
+      "description": "Remote commands queue"
+    },
+    "/logs/{logId}": {
+      "schema": "Log",
+      "description": "Operation logs"
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "name": "Titan MDM Console",
+  "description": "A professional Mobile Device Management console for device enrollment, remote wipe, and real-time monitoring.",
+  "requestFramePermissions": ["camera", "usb"]
+}

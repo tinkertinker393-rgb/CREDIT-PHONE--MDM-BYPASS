@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    // Collection: devices
+    // Fields: id, model, brand, androidVersion, imei, status, lastSeen, kgState, securityPatch
+    //
+    // Collection: commands
+    // Fields: id, deviceId, type, status, createdAt
+    //
+    // Collection: logs
+    // Fields: id, deviceId, message, type, timestamp
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.email == "eliakimrotich@gmail.com" && request.auth.token.email_verified == true);
+    }
+
+    match /devices/{deviceId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /commands/{commandId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /logs/{logId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow delete: if isAdmin();
+    }
+  }
+}
